@@ -1,0 +1,103 @@
+<?xml version="1.0" encoding="UTF-8"?>  
+<beans xmlns="http://www.springframework.org/schema/beans"  
+    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:p="http://www.springframework.org/schema/p"  
+    xmlns:context="http://www.springframework.org/schema/context"  
+    xmlns:mvc="http://www.springframework.org/schema/mvc"  
+    xsi:schemaLocation="http://www.springframework.org/schema/beans    
+                        http://www.springframework.org/schema/beans/spring-beans-3.1.xsd    
+                        http://www.springframework.org/schema/context    
+                        http://www.springframework.org/schema/context/spring-context-3.1.xsd    
+                        http://www.springframework.org/schema/mvc    
+                        http://www.springframework.org/schema/mvc/spring-mvc-4.0.xsd">  
+    <!-- 自动扫描 -->  
+    <context:component-scan base-package="com.uniplore.benchmarksuite" />  
+    <!-- 引入配置文件 -->  
+    <bean id="propertyConfigurer"  
+        class="org.springframework.beans.factory.config.PropertyPlaceholderConfigurer">  
+        <property name="location" value="classpath:jdbc.properties" />  
+    </bean>  
+    <bean id="dataSource" class="com.alibaba.druid.pool.DruidDataSource" init-method="init" destroy-method="close"> 
+	      <!-- 基本属性 driverClassName、url、user、password -->
+	      <property name="driverClassName" value="${mysql.driver}"/>
+	      <property name="url" value="${mysql.url}" />
+	      <property name="username" value="${mysql.username}" />
+	      <property name="password" value="${mysql.password}" />
+	
+	      <!-- 配置初始化大小、最小、最大 -->
+	      <property name="initialSize" value="1" />
+	      <property name="minIdle" value="1" /> 
+	      <property name="maxActive" value="20" />
+	
+	      <!-- 配置获取连接等待超时的时间 -->
+	      <property name="maxWait" value="60000" />
+	
+	      <!-- 配置间隔多久才进行一次检测，检测需要关闭的空闲连接，单位是毫秒 -->
+	      <property name="timeBetweenEvictionRunsMillis" value="60000" />
+	
+	      <!-- 配置一个连接在池中最小生存的时间，单位是毫秒 -->
+	      <property name="minEvictableIdleTimeMillis" value="300000" />
+	
+	      <property name="validationQuery" value="SELECT 'x'" />
+	      <property name="testWhileIdle" value="true" />
+	      <property name="testOnBorrow" value="false" />
+	      <property name="testOnReturn" value="false" />
+	
+	      <!-- 打开PSCache，并且指定每个连接上PSCache的大小 -->
+	      <property name="poolPreparedStatements" value="true" />
+	      <property name="maxPoolPreparedStatementPerConnectionSize" value="20" />
+	
+	      <!-- 配置监控统计拦截的filters -->
+	      <property name="filters" value="stat" /> 
+    </bean>
+    <!-- 
+		mybatis的SqlSession的工厂: SqlSessionFactoryBean dataSource:引用数据源 MyBatis定义数据源,同意加载配置 
+	-->
+	<bean id="sqlSessionFactory" class="org.mybatis.spring.SqlSessionFactoryBean">
+	    <!-- 指定数据源，在上面的配置中已经指定，ref参数指定上面数据源的id -->
+		<property name="dataSource" ref="dataSource" />
+		
+		<!-- 
+		    类型别名包，指定相应的entity类的名字，当有多个entity在不同的包中时，请依次使用value标签指出，
+		    通过定义下面的别名包，Mybatis会进行自动的扫描，根据扫描的结果自动的定义别名
+		    别名就是POJO类名(首字母大小写均可，通常情况下为小写)
+		-->
+		<!-- <property name="typeAliasesPackage">
+		  <value>com.uniplore.benchmarksuite.benchmarksuite.graph.ms.sign.entity</value>
+		</property> -->
+		<!-- 
+		     mapperLocations:它表示我们的Mapper文件存放的位置，当我们的Mapper文件跟对应的Mapper接口处于同一个位置的时候
+		     我们可以不用指定该属性的值
+		 -->
+		<!-- <property name="mapperLocations">
+		  <value>
+		     classpath:com/uniplore/graph/ms/sign/mapper/*Mapper.xml
+		     classpath:com/uniplore/graph/ms/login/mapper/*Mapper.xml
+		  </value>
+		</property> -->
+    </bean>
+    
+    <!--
+        mybatis自动扫描加载Sql映射文件/接口 : MapperScannerConfigurer sqlSessionFactory 
+		basePackage:指定sql映射文件/接口所在的包（自动扫描），当有新的mapper包需要被扫描时，
+		在value属性中，使用,分割加入新的mapper即可 
+ 	-->
+	<bean class="org.mybatis.spring.mapper.MapperScannerConfigurer">
+	
+	    <!-- 指定基础包，即自动扫描某个包及其它的子包下的所有映射接口类 -->
+		<!-- <property name="basePackage">
+			<value>
+				com.uniplore.benchmarksuite.benchmarksuite.
+				com.uniplore.benchmarksuite.benchmarksuite.graph.ms.login.mapper
+			</value>
+		</property> -->
+		
+		<!-- 指定sql会话工厂，在上面的配置中已经明确的指定过 -->
+		<property name="sqlSessionFactoryBeanName" value="sqlSessionFactory" />
+	</bean>	
+    <!-- (事务管理)transaction manager, use JtaTransactionManager for global tx -->  
+    <bean id="transactionManager"  
+        class="org.springframework.jdbc.datasource.DataSourceTransactionManager">  
+        <property name="dataSource" ref="dataSource" />  
+    </bean>  
+
+</beans>
