@@ -1,10 +1,12 @@
 package com.uniplore.test;
 
+import com.uniplore.benchmarksuite.controller.TestController;
 
 public class Test {
 
-	@org.junit.Test
-	public void test(){
-		System.out.println("测试maven使用");
-	}
+  @org.junit.Test
+  public void test() {
+    TestController testController = new TestController();
+    testController.toIndex();
+  }
 }
