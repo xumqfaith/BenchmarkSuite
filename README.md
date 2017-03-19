@@ -1,7 +1,5 @@
 ### BenchmarkSuite
 ***
-[TOC]
-***
 
 #### **概述**
 ***
