@@ -1,0 +1,75 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="x5-orientation" content="portrait">
+    <meta http-equiv="X-UA-Compatible" content="IE=Edge,chrome=1" />
+    <meta name="format-detection" content="telephone=no" />
+    <meta name="description" content="">
+    <meta name="keywords" content="">
+    <title>首页</title>
+    <link rel="stylesheet" href="css/index.css">
+
+</head>
+<body>
+    <div class="wrap">
+        <ul class="content_list">
+            <li class="back">登录</li>
+            <li>注册</li>
+        </ul>
+        <ul class="content">
+            <!--登录-->
+            <li class="log">
+                <ul>
+                    <li>用户名：<input type="text" placeholder="请输入用户名或邮箱"><span class="message">密码在6到20位之间！</span></li>
+                    <li>密码：<input type="password" placeholder="请输入密码"><span class="message"></span></li>
+                    <li>验证码：<input type="text" placeholder="请输入验证码"><span class="message"></span></li>
+                    <li><input type="submit" value="登录"><span class="message"></span></li>
+                </ul>
+            </li>
+            <!--注册-->
+            <li class="reg">
+                <ul>
+                    <li>用户名：<input type="email" placeholder="请输入邮箱"><span class="message"></span></li>
+                    <li>密码：<input type="password" placeholder="请输入密码"><span class="message"></span></li>
+                    <li>验证码：<input type="text" placeholder="请输入验证码"><span class="message"></span></li>
+                    <li><input type="submit" value="注册"><span class="message"></span></li>
+                </ul>
+            </li>
+        </ul>
+    </div>
+</body>
+<script src="./src/main/webapp/utils/jquery/jQuery-2.2.0.min.js"></script>
+<script>
+    (function ($,w) {
+        $('.content_list li').click(function () {
+            $(this).addClass('back').siblings().removeClass('back');
+            var index=$(this).index();
+            $('.content>li').eq(index).css('display','block').siblings().css('display','none');
+        });
+        //当输入的时候，提示相应的提示信息
+        $(".reg input[type='email']").focus(function () {
+            console.log($(".reg input[type='email']").val().length);
+//            if($(".reg input[type='email']").val().length>0){
+//                $('.message').toast("66666");
+//            }
+        });
+        (function () {
+            $.fn.toast=function (){
+              var msg;
+                $('.message').text(msg);
+//                setTimeout(function () {
+//                    $('.message').text(msg);
+//                },500);
+            }
+        })();
+
+
+
+
+    })(jQuery,window)
+
+
+
+</script>
+</html>
